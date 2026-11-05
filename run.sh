@@ -33,7 +33,7 @@ CSS="$(cat "$MD2PDF_CSS")"
 sed \
     "s|\$githubcss\$|$CSS|g" \
     "$MD2PDF_TEMPLATE" \
-    > "$TEMPLATE"
+    >"$TEMPLATE"
 
 pandoc \
     -f gfm \
