@@ -1,261 +1,220 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
+    <meta charset="utf-8">
+
+    <style>
+        $githubcss$
+
+        $highlighting-css$
+
+        @page {
+            margin: 15mm;
+        }
+
+        html,
+        body {
+            background: white;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .markdown-body {
+            box-sizing: border-box;
+
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+
+            font-size: 16px;
+            line-height: 1.6;
+
+            color: #24292f;
+            background: white;
+        }
+
+        #TOC {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+
+            padding: 1em 1.5em;
+            margin-bottom: 2em;
+
+            page-break-after: avoid;
+        }
+
+        #TOC ul {
+            list-style-type: none;
+            margin-bottom: 0;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            page-break-after: avoid;
+            break-after: avoid-page;
+        }
+
+        h1+*,
+        h2+*,
+        h3+*,
+        h4+* {
+            page-break-before: avoid;
+            break-before: avoid-page;
+        }
+
+        h1 {
+            margin-top: 1em;
+            border-bottom: 1px solid #d0d7de;
+            padding-bottom: .3em;
+        }
+
+        h2 {
+            margin-top: .8em;
+            border-bottom: 1px solid #d0d7de;
+            padding-bottom: .3em;
+        }
+
+        h3 {
+            margin-top: .8em;
+        }
+
+        p {
+            orphans: 3;
+            widows: 3;
+        }
+
+        ul,
+        ol {
+            padding-left: 2em;
+        }
+
+        code:not(.sourceCode) {
+            background: rgba(175, 184, 193, 0.2);
+            border-radius: 4px;
+
+            padding: 0.15em 0.3em;
+            font-size: 85%;
+        }
 
-<link rel="stylesheet" href="github-markdown.min.css">
+        code span.st {
+            color: #0a3069;
+        }
 
-<style>
-$highlighting-css$
+        code span.ss {
+            color: #0a3069;
+        }
 
-/* ---------- PDF page setup ---------- */
+        code span.va {
+            color: #953800;
+        }
 
-@page {
-    margin: 15mm;
-}
+        code span.op {
+            color: #cf222e;
+        }
 
-html,
-body {
-    background: white;
-}
+        code span.kw {
+            color: #cf222e;
+            font-weight: 600;
+        }
 
-body {
-    margin: 0;
-    padding: 0;
-}
+        code span.fu {
+            color: #8250df;
+        }
 
-/* ---------- Main document ---------- */
+        code span.dv {
+            color: #0550ae;
+        }
 
-.markdown-body {
-    box-sizing: border-box;
+        pre.sourceCode {
+            background: #fafbfc;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
 
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
+            padding: 16px 20px;
 
-    font-size: 16px;
-    line-height: 1.6;
+            overflow: visible !important;
 
-    color: #24292f;
-    background: white;
-}
+            font-size: 0.95em;
+            line-height: 1.45;
+        }
 
-/* ---------- Table of contents ---------- */
+        div.sourceCode {
+            overflow: visible !important;
+        }
 
-#TOC {
-    background: #f6f8fa;
-    border: 1px solid #d0d7de;
-    border-radius: 6px;
+        code.sourceCode {
+            white-space: pre-wrap;
+        }
 
-    padding: 1em 1.5em;
-    margin-bottom: 2em;
+        pre.text,
+        pre:not(.sourceCode) {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
 
-    page-break-after: avoid;
-}
+            padding: 16px 20px;
 
-/* ---------- Headings ---------- */
+            overflow: visible !important;
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    page-break-after: avoid;
-    break-after: avoid-page;
-}
+            break-inside: avoid;
+            page-break-inside: avoid;
 
-h1 + *,
-h2 + *,
-h3 + *,
-h4 + * {
-    page-break-before: avoid;
-    break-before: avoid-page;
-}
+            line-height: 1.4;
+        }
 
-h1 {
-    margin-top: 1.25em;
-    border-bottom: 1px solid #d0d7de;
-    padding-bottom: .3em;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-h2 {
-    margin-top: 1em;
-    border-bottom: 1px solid #d0d7de;
-    padding-bottom: .3em;
-}
+        table th,
+        table td {
+            border: 1px solid #d0d7de;
+            padding: 6px 13px;
+        }
 
-/*
-Uncomment for report-style chapters
+        table th {
+            background: #f6f8fa;
+        }
 
-h1:not(:first-of-type) {
-    break-before: page;
-}
-*/
+        img {
+            max-width: 100%;
+            height: auto;
+        }
 
-/* ---------- Paragraph control ---------- */
+        blockquote {
+            color: #57606a;
 
-p {
-    orphans: 3;
-    widows: 3;
-}
+            border-left: 0.25em solid #d0d7de;
 
-/* ---------- Lists ---------- */
+            padding-left: 1em;
+            margin-left: 0;
+        }
 
-ul,
-ol {
-    padding-left: 2em;
-}
-
-/* ---------- Inline code ---------- */
-
-code:not(.sourceCode) {
-    background: rgba(175, 184, 193, 0.2);
-    border-radius: 4px;
-
-    padding: 0.15em 0.3em;
-    font-size: 85%;
-}
-
-/* ---------- Syntax highlighting ---------- */
-
-code span.st { color: #0a3069; }
-code span.ss { color: #0a3069; }
-
-code span.va { color: #953800; }
-
-code span.op { color: #cf222e; }
-
-code span.kw {
-    color: #cf222e;
-    font-weight: 600;
-}
-
-code span.fu { color: #8250df; }
-
-code span.dv { color: #0550ae; }
-
-/* ---------- Source code blocks ---------- */
-
-pre.sourceCode {
-    background: #f6f8fa;
-    border: 1px solid #d0d7de;
-    border-radius: 6px;
-
-    padding: 16px 20px;
-
-    overflow: visible !important;
-}
-
-/* Prevent Chromium PDF scrollbars */
-
-div.sourceCode {
-    overflow: visible !important;
-}
-
-code.sourceCode {
-    white-space: pre-wrap;
-}
-
-/* Keep small diagrams together */
-
-pre.text,
-pre:not(.sourceCode) {
-    background: #f6f8fa;
-    border: 1px solid #d0d7de;
-    border-radius: 6px;
-
-    padding: 16px 20px;
-
-    overflow: visible !important;
-
-    break-inside: avoid;
-    page-break-inside: avoid;
-
-    line-height: 1.4;
-}
-
-/* Keep diagrams centered */
-
-pre.text {
-    line-height: 1.4;
-}
-
-/* Slightly tighter headings */
-
-h1 {
-    margin-top: 1em;
-    border-bottom: 1px solid #d0d7de;
-    padding-bottom: .3em;
-}
-
-h2 {
-    margin-top: 0.8em;
-    border-bottom: 1px solid #d0d7de;
-    padding-bottom: .3em;
-}
-
-/* Better TOC */
-
-#TOC {
-    page-break-after: avoid;
-}
-
-#TOC ul {
-    list-style-type: none;
-}
-
-/* ---------- Tables ---------- */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table th,
-table td {
-    border: 1px solid #d0d7de;
-    padding: 6px 13px;
-}
-
-table th {
-    background: #f6f8fa;
-}
-
-/* ---------- Images ---------- */
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-/* ---------- Blockquotes ---------- */
-
-blockquote {
-    color: #57606a;
-
-    border-left: 0.25em solid #d0d7de;
-
-    padding-left: 1em;
-    margin-left: 0;
-}
-
-/* ---------- Horizontal rules ---------- */
-
-hr {
-    border: 0;
-    border-top: 1px solid #d0d7de;
-    margin: 2em 0;
-}
-</style>
+        hr {
+            border: 0;
+            border-top: 1px solid #d0d7de;
+            margin: 2em 0;
+        }
+    </style>
 
 </head>
 
 <body>
 
-<article class="markdown-body">
-$body$
-</article>
+    <article class="markdown-body">
+        $body$
+    </article>
 
 </body>
+
 </html>

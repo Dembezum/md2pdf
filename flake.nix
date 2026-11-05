@@ -4,37 +4,34 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs = { nixpkgs, ... }:
-  let
-    system = "x86_64-linux";
+    let
+      system = "x86_64-linux";
 
-    pkgs = import nixpkgs {
-      inherit system;
+      pkgs = import nixpkgs {
+        inherit system;
+      };
+
+      md2pdf = pkgs.writeShellApplication {
+        name = "md2pdf";
+
+        runtimeInputs = with pkgs; [
+          pandoc
+          chromium
+          gnused
+        ];
+
+        text = ''
+          exec ${./run.sh} "$@"
+        '';
+      };
+    in {
+      apps.${system}.default = {
+        type = "app";
+        program = "${md2pdf}/bin/md2pdf";
+      };
+
+      devShells.${system}.default = pkgs.mkShell {
+        packages = [ md2pdf ];
+      };
     };
-
-    md2pdf = pkgs.writeShellApplication {
-      name = "md2pdf";
-
-      runtimeInputs = with pkgs; [
-        pandoc
-        chromium
-        gnused
-      ];
-
-      text = ''
-        exec ${./run.sh} "$@"
-      '';
-    };
-  in
-  {
-    apps.${system}.default = {
-      type = "app";
-      program = "${md2pdf}/bin/md2pdf";
-    };
-
-    devShells.${system}.default = pkgs.mkShell {
-      packages = [
-        md2pdf
-      ];
-    };
-  };
 }

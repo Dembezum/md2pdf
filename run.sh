@@ -25,16 +25,17 @@ HTML="$(mktemp --suffix=.html)"
 TEMPLATE="$(mktemp --suffix=.html)"
 
 cleanup() {
-    rm -f "$HTML"
-    rm -f "$TEMPLATE"
+    rm -f "$HTML" "$TEMPLATE"
 }
 
 trap cleanup EXIT
 
+CSS="$(cat "$SCRIPT_DIR/github-markdown.min.css")"
+
 sed \
-    "s|github-markdown.min.css|file://$SCRIPT_DIR/github-markdown.min.css|g" \
+    "s|\$githubcss\$|$CSS|g" \
     "$SCRIPT_DIR/template.html" \
-    > "$TEMPLATE"
+    >"$TEMPLATE"
 
 pandoc \
     -f gfm \
