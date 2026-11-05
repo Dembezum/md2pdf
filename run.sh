@@ -16,8 +16,6 @@ INPUT="$1"
     exit 1
 }
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
 NAME="$(basename "$INPUT" .md)"
 DIR="$(dirname "$INPUT")"
 
@@ -30,12 +28,12 @@ cleanup() {
 
 trap cleanup EXIT
 
-CSS="$(cat "$SCRIPT_DIR/github-markdown.min.css")"
+CSS="$(cat "$MD2PDF_CSS")"
 
 sed \
     "s|\$githubcss\$|$CSS|g" \
-    "$SCRIPT_DIR/template.html" \
-    >"$TEMPLATE"
+    "$MD2PDF_TEMPLATE" \
+    > "$TEMPLATE"
 
 pandoc \
     -f gfm \

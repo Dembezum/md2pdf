@@ -3,7 +3,8 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { nixpkgs, ... }:
+  outputs =
+    { nixpkgs, ... }:
     let
       system = "x86_64-linux";
 
@@ -21,10 +22,14 @@
         ];
 
         text = ''
+          export MD2PDF_TEMPLATE="${./template.html}"
+          export MD2PDF_CSS="${./github-markdown.min.css}"
+
           exec ${./run.sh} "$@"
         '';
       };
-    in {
+    in
+    {
       apps.${system}.default = {
         type = "app";
         program = "${md2pdf}/bin/md2pdf";
