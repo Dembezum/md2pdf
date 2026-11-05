@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="github-markdown.min.css">
+
+<style>
+$highlighting-css$
+
+/* ---------- PDF page setup ---------- */
+
+@page {
+    margin: 15mm;
+}
+
+html,
+body {
+    background: white;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* ---------- Main document ---------- */
+
+.markdown-body {
+    box-sizing: border-box;
+
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+
+    font-size: 16px;
+    line-height: 1.6;
+
+    color: #24292f;
+    background: white;
+}
+
+/* ---------- Table of contents ---------- */
+
+#TOC {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+
+    padding: 1em 1.5em;
+    margin-bottom: 2em;
+
+    page-break-after: avoid;
+}
+
+/* ---------- Headings ---------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    page-break-after: avoid;
+    break-after: avoid-page;
+}
+
+h1 + *,
+h2 + *,
+h3 + *,
+h4 + * {
+    page-break-before: avoid;
+    break-before: avoid-page;
+}
+
+h1 {
+    margin-top: 1.25em;
+    border-bottom: 1px solid #d0d7de;
+    padding-bottom: .3em;
+}
+
+h2 {
+    margin-top: 1em;
+    border-bottom: 1px solid #d0d7de;
+    padding-bottom: .3em;
+}
+
+/*
+Uncomment for report-style chapters
+
+h1:not(:first-of-type) {
+    break-before: page;
+}
+*/
+
+/* ---------- Paragraph control ---------- */
+
+p {
+    orphans: 3;
+    widows: 3;
+}
+
+/* ---------- Lists ---------- */
+
+ul,
+ol {
+    padding-left: 2em;
+}
+
+/* ---------- Inline code ---------- */
+
+code:not(.sourceCode) {
+    background: rgba(175, 184, 193, 0.2);
+    border-radius: 4px;
+
+    padding: 0.15em 0.3em;
+    font-size: 85%;
+}
+
+/* ---------- Syntax highlighting ---------- */
+
+code span.st { color: #0a3069; }
+code span.ss { color: #0a3069; }
+
+code span.va { color: #953800; }
+
+code span.op { color: #cf222e; }
+
+code span.kw {
+    color: #cf222e;
+    font-weight: 600;
+}
+
+code span.fu { color: #8250df; }
+
+code span.dv { color: #0550ae; }
+
+/* ---------- Source code blocks ---------- */
+
+pre.sourceCode {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+
+    padding: 16px 20px;
+
+    overflow: visible !important;
+}
+
+/* Prevent Chromium PDF scrollbars */
+
+div.sourceCode {
+    overflow: visible !important;
+}
+
+code.sourceCode {
+    white-space: pre-wrap;
+}
+
+/* Keep small diagrams together */
+
+pre.text,
+pre:not(.sourceCode) {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+
+    padding: 16px 20px;
+
+    overflow: visible !important;
+
+    break-inside: avoid;
+    page-break-inside: avoid;
+
+    line-height: 1.4;
+}
+
+/* Keep diagrams centered */
+
+pre.text {
+    line-height: 1.4;
+}
+
+/* Slightly tighter headings */
+
+h1 {
+    margin-top: 1em;
+    border-bottom: 1px solid #d0d7de;
+    padding-bottom: .3em;
+}
+
+h2 {
+    margin-top: 0.8em;
+    border-bottom: 1px solid #d0d7de;
+    padding-bottom: .3em;
+}
+
+/* Better TOC */
+
+#TOC {
+    page-break-after: avoid;
+}
+
+#TOC ul {
+    list-style-type: none;
+}
+
+/* ---------- Tables ---------- */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    border: 1px solid #d0d7de;
+    padding: 6px 13px;
+}
+
+table th {
+    background: #f6f8fa;
+}
+
+/* ---------- Images ---------- */
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ---------- Blockquotes ---------- */
+
+blockquote {
+    color: #57606a;
+
+    border-left: 0.25em solid #d0d7de;
+
+    padding-left: 1em;
+    margin-left: 0;
+}
+
+/* ---------- Horizontal rules ---------- */
+
+hr {
+    border: 0;
+    border-top: 1px solid #d0d7de;
+    margin: 2em 0;
+}
+</style>
+
+</head>
+
+<body>
+
+<article class="markdown-body">
+$body$
+</article>
+
+</body>
+</html>
