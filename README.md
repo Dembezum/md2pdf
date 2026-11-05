@@ -17,6 +17,8 @@ The generated PDFs are optimized for technical documentation and include:
 - No browser headers or footers
 - Embedded styling for reproducible output
 
+> See the [output here](./mdtest.pdf)
+
 ---
 
 ## Features
