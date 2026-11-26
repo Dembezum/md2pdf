@@ -38,13 +38,13 @@ The generated PDFs are optimized for technical documentation and include:
 Generate a PDF from a Markdown file:
 
 ```bash
-nix run git+ssh://git@dkgiteap01/a107151b/md2pdf -- document.md
+nix run git+ssh://git@dkgiteap01/<user>/md2pdf -- document.md
 ```
 
 Example:
 
 ```bash
-nix run git+ssh://git@dkgiteap01/a107151b/md2pdf -- secrets.md
+nix run git+ssh://git@dkgiteap01/<user>/md2pdf -- secrets.md
 ```
 
 Output:
