@@ -1,0 +1,10 @@
+
+# Generated files
+*.pdf
+*.patch
+result
+result-*
+__pycache__/
+
+# Official PDF previews
+!assets/previews/*.pdf
