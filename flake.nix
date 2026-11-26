@@ -19,11 +19,16 @@
           pandoc
           chromium
           gnused
+          mermaid-cli
+          coreutils
         ];
 
         text = ''
           export MD2PDF_TEMPLATE="${./template.html}"
           export MD2PDF_CSS="${./github-markdown.min.css}"
+
+          export MD2PDF_MERMAID_FILTER="${./mermaid.lua}"
+          export PUPPETEER_EXECUTABLE_PATH="${pkgs.chromium}/bin/chromium"
 
           exec ${./run.sh} "$@"
         '';

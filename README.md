@@ -25,6 +25,7 @@ The generated PDFs are optimized for technical documentation and include:
 
 - GitHub style Markdown rendering
 - Syntax highlighting via Pandoc
+- Automatic Mermaid diagram rendering (SVG)
 - Automatic table of contents
 - Professional PDF layout
 - Works entirely through `nix run`
@@ -57,12 +58,31 @@ The PDF is generated next to the source Markdown file.
 
 ---
 
+## Mermaid
+
+Mermaid code blocks are rendered automatically using Mermaid CLI. No additional
+commands or downloads are needed once the Nix dependencies are available.
+
+````markdown
+```mermaid
+flowchart TD
+    A[Markdown] --> B[Pandoc]
+    B --> C[Chromium]
+    C --> D[PDF]
+```
+````
+
+Diagrams are embedded as SVG images. Invalid Mermaid syntax stops the conversion.
+
+---
+
 ## Repository Structure
 
 ```text
 md2pdf/
 ├── flake.nix
 ├── run.sh
+├── mermaid.lua
 ├── template.html
 ├── github-markdown.min.css
 └── README.md
@@ -72,6 +92,7 @@ md2pdf/
 | -------- | -------- |
 | `flake.nix` | Nix flake definition |
 | `run.sh` | Main conversion logic |
+| `mermaid.lua` | Renders Mermaid code blocks as SVG |
 | `template.html` | PDF rendering template |
 | `github-markdown.min.css` | Embedded GitHub styling |
 | `README.md` | Documentation |
@@ -83,7 +104,7 @@ md2pdf/
 ```text
 Markdown
     ↓
-Pandoc
+Pandoc + Mermaid filter
     ↓
 HTML
     ↓

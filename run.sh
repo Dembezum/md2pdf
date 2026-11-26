@@ -40,6 +40,7 @@ pandoc \
     -s \
     --toc \
     --toc-depth=3 \
+    --lua-filter="$MD2PDF_MERMAID_FILTER" \
     --highlight-style=pygments \
     --template="$TEMPLATE" \
     "$INPUT" \
