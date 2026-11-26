@@ -1,67 +1,96 @@
 # md2pdf
 
-Convert GitHub-flavored Markdown into clean, PDFs using:
+Convert GitHub-flavored Markdown into clean, readable PDFs. Designed for technical documentation, architecture diagrams and reports.
 
-- Pandoc
-- Chromium
-- GitHub Markdown CSS
-- Nix Flakes
-
-The generated PDFs are optimized for technical documentation and include:
-
-- Four document themes with packaged fonts
-- Syntax highlighting
-- Automatic table of contents
-- Clean page layout
-- Sensible page breaks
-- Page numbers without browser URL/date headers
-- Embedded styling for reproducible output
-
-> See the [output here](./mdtest.pdf)
-
----
-
-## Features
-
-- GitHub style Markdown rendering
-- Syntax highlighting via Pandoc
-- Automatic Mermaid diagram rendering (SVG)
-- Automatic table of contents
-- Professional PDF layout
-- Works entirely through `nix run`
-- No local Pandoc or Chromium installation required
-- Fully self-contained flake
-
----
+Built with Pandoc, Chromium and Mermaid, packaged as a Nix flake. No separate tool installations or configuration files are required. Rendering runs locally and works offline once the Nix dependencies are available.
 
 ## Usage
 
-Generate a PDF from a Markdown file:
+Run from a local checkout:
 
 ```bash
-nix run git+ssh://git@dkgiteap01/<user>/md2pdf -- document.md
+nix run . -- document.md
 ```
 
-Example:
+Or run directly from the Git repository (replace `<user>` with the repository owner):
 
 ```bash
-nix run git+ssh://git@dkgiteap01/<user>/md2pdf -- secrets.md
+nix run 'git+ssh://git@dkgiteap01/<user>/md2pdf' -- document.md
 ```
 
-Output:
+The PDF is saved next to the Markdown file unless an output path is specified.
 
-```text
-secrets.pdf
+### Combine multiple files
+
+```bash
+nix run . -- docs/*.md -o documentation.pdf
 ```
 
-The PDF is generated next to the source Markdown file.
+Files are combined in argument order, with a shared cover page, table of contents, PDF bookmarks and continuous page numbering. Use `-o` when combining multiple files.
 
----
+## Features
+
+- Four built-in themes with packaged Inter and JetBrains Mono fonts
+- GitHub-flavored Markdown, syntax highlighting and GitHub alerts
+- Automatic Mermaid rendering with theme-aware colours and adaptive SVG sizing
+- Smart pagination, compact tables and heading-aware page breaks
+- Clickable table of contents with page numbers and hierarchical PDF bookmarks
+- Automatic document titles, cover pages and footers
+- Multi-file input, optional section numbering and embedded PDF metadata
+- Reproducible Nix packaging and local rendering
+
+## Themes
+
+| Theme | Description | Example PDF |
+| --- | --- | --- |
+| `technical` | Modern technical documentation (default) | [Preview](assets/previews/technical.pdf) |
+| `academic` | Serif typography for reports | [Preview](assets/previews/academic.pdf) |
+| `professional` | Corporate and internal documentation | [Preview](assets/previews/professional.pdf) |
+| `minimal` | Clean, monochrome layout | [Preview](assets/previews/minimal.pdf) |
+
+```bash
+nix run . -- examples/showcase.md --theme academic
+```
+
+Generate all four examples:
+
+```bash
+for theme in technical academic professional minimal; do
+    nix run . -- examples/showcase.md \
+        --theme "$theme" \
+        -o "assets/previews/$theme.pdf"
+done
+```
+
+## Command-line options
+
+| Option | Description |
+| --- | --- |
+| `-o`, `--output FILE` | Set the output PDF path |
+| `--theme THEME` | Select a document theme |
+| `--pagination MODE` | Select a pagination mode |
+| `--cover` | Enable the cover page |
+| `--no-cover` | Disable the cover page |
+| `--no-toc` | Omit the table of contents |
+| `--no-footer` | Omit the footer and page numbers |
+| `--number-sections` | Enable automatic section numbering |
+| `--metadata-file FILE` | Load optional Pandoc YAML metadata |
+| `-h`, `--help` | Show usage |
+
+### Pagination
+
+| Mode | Behaviour |
+| --- | --- |
+| `smart` (default) | Start H1 headings on new pages and keep short subsections together where possible |
+| `chapters` | Start H1 headings on new pages |
+| `sections` | Start H1 and H2 headings on new pages, except consecutive H1/H2 headings |
+| `flow` | Use natural page breaks |
+
+All modes try to keep headings with their following content. Long sections and tables can still span pages.
 
 ## Mermaid
 
-Mermaid code blocks are rendered automatically using Mermaid CLI. No additional
-commands or downloads are needed once the Nix dependencies are available.
+Standard Mermaid code blocks are rendered automatically and embedded as SVG images.
 
 ````markdown
 ```mermaid
@@ -72,119 +101,86 @@ flowchart TD
 ```
 ````
 
-Diagrams are embedded as SVG images. Invalid Mermaid syntax stops the conversion.
+Diagram sizes are selected automatically from the rendered SVG dimensions. For an individual diagram, use one of the following fenced code languages:
 
----
+| Language | Maximum height |
+| --- | ---: |
+| `mermaid` | Automatic |
+| `mermaid-small` | 65 mm |
+| `mermaid-normal` | 110 mm |
+| `mermaid-large` | 180 mm |
+| `mermaid-full` | 215 mm |
 
-## Repository Structure
+Diagrams preserve their aspect ratio and are not enlarged beyond their natural dimensions. Invalid Mermaid syntax stops the conversion.
 
-```text
-md2pdf/
-├── flake.nix
-├── run.sh
-├── mermaid.lua
-├── template.html
-├── github-markdown.min.css
-└── README.md
-```
+## Document defaults
 
-| File | Purpose |
-| -------- | -------- |
-| `flake.nix` | Nix flake definition |
-| `run.sh` | Main conversion logic |
-| `mermaid.lua` | Renders Mermaid code blocks as SVG |
-| `template.html` | PDF rendering template |
-| `github-markdown.min.css` | Embedded GitHub styling |
-| `README.md` | Documentation |
+No YAML is required. The technical theme, smart pagination, adaptive Mermaid sizing, table of contents, bookmarks and footer are enabled by default.
 
----
+Single-file documents use the first H1 as their title when no title is supplied. Combined documents get a cover page and a title derived from their common input directory (the parent directory for `docs`, `doc` or `documentation`), or the output filename if input directories differ. Single-file documents have no cover by default. Section numbering is opt-in to avoid duplicating existing heading numbers.
 
-## Output Pipeline
+### Optional metadata
 
-```text
-Markdown
-    ↓
-Pandoc + Mermaid filter
-    ↓
-HTML
-    ↓
-GitHub Markdown CSS
-    ↓
-Chromium
-    ↓
-PDF
-```
-
----
-
-## Themes and layout
-
-```bash
-nix run . -- showcase.md
-nix run . -- showcase.md --theme academic
-nix run . -- showcase.md --theme professional --pagination sections
-nix run . -- showcase.md --theme minimal --pagination flow --no-toc --no-footer
-```
-
-Themes: `technical` (default), `academic`, `professional`, `minimal`.
-
-Pagination: `smart` (default) starts H1 headings on new pages and tries to keep short leaf subsections together. `chapters` starts H1 headings on new pages; `sections`
-also starts H2 headings on new pages, except immediately after H1; `flow`
-uses natural page breaks. All modes keep headings with following content.
-
-Optional YAML metadata:
+Use YAML frontmatter or `--metadata-file document.yaml` when you need to override the defaults:
 
 ```yaml
 ---
 title: Linux Fleet Management
 subtitle: Architecture and implementation
 author: Platform Engineering
-version: 2.0
-date: November 2026
+version: "1.0"
+subject: Declarative Linux fleet management
+keywords:
+  - NixOS
+  - GitOps
 cover: true
 toc: true
 theme: technical
-pagination: chapters
+pagination: smart
+mermaid-size: auto
 ---
 ```
 
-CLI theme and pagination override metadata. Use `toc: false` or `--no-toc`
-to omit the contents page. The first H1 supplies the title when frontmatter omits it. Cover pages require a title or H1. Page numbers can be removed with `--no-footer`. TOC page numbers are resolved from the first PDF rendering pass.
-GitHub alerts and language-labelled fenced code blocks are styled automatically.
-Local image paths are resolved relative to the Markdown file.
+Explicit title and cover metadata override automatic defaults. CLI theme, pagination and cover options override the corresponding metadata. Cover pages require a title or an H1. Set `toc: false` or use `--no-toc` to hide the contents page.
 
-Mermaid sizes are selected automatically from the rendered SVG dimensions.
-Use a fenced language of `mermaid-small`, `mermaid-normal`, `mermaid-large`,
-or `mermaid-full` to override the maximum height (65, 110, 180 or 215 mm).
-The document-wide `mermaid-size` metadata accepts the same sizes or `auto`.
-All sizes preserve aspect ratio and do not upscale beyond the natural image size.
-Smart grouping is best-effort: long sections and tables can still span pages.
+## Rendering pipeline
 
-## Combined documents and navigation
-
-```bash
-md2pdf docs/*.md -o documentation.pdf
-md2pdf docs/01-intro.md docs/02-architecture.md -o documentation.pdf --number-sections --metadata-file document.yaml
+```mermaid
+flowchart TD
+    A[Markdown files] --> B[Pandoc]
+    B --> C[Mermaid and design filters]
+    C --> D[Styled HTML]
+    D --> E[Chromium PDF rendering]
+    E --> F[TOC page resolution]
+    F --> G[Final PDF rendering]
+    G --> H[PDF metadata, bookmarks and footers]
 ```
 
-Inputs are combined in argument order into one PDF with a shared contents page,
-cover by default, footer and hierarchical PDF bookmarks. Use `-o` for
-multiple inputs. Section numbering is opt-in; avoid it if headings already
-contain manual numbers. The metadata file accepts the usual Pandoc YAML keys,
-including `title`, `author`, `subject`, `keywords`, `cover` and `theme`.
-When input frontmatter conflicts, Pandoc's combined metadata rules apply.
-Image lookup searches input directories in order; use unique relative asset
-paths to avoid ambiguity. Links to other Markdown files are not rewritten.
-Bookmarks use measured heading destinations, with first-pass positions as a
-fallback when Chromium omits final named destinations.
+## Repository structure
 
-### Defaults without configuration
+```text
+md2pdf/
+├── assets/previews/         # Example PDFs
+├── examples/                # Example Markdown files
+├── filters/
+│   └── design.lua           # Document layout and metadata
+├── styles/
+│   ├── base.css             # Base styling
+│   └── design.css           # Themes and print layout
+├── finish.py                # TOC resolution and PDF post-processing
+├── flake.nix                # Package and runtime dependencies
+├── flake.lock
+├── github-markdown.min.css
+├── mermaid.lua              # Mermaid rendering
+├── run.sh                   # Conversion entry point
+├── template.html            # Pandoc HTML template
+└── README.md
+```
 
-No YAML file is required. Combined documents get a cover and a project title
-from the common input directory (the parent of `docs`, `doc` or `documentation`),
-or the output filename when inputs use different directories. Single documents
-retain the first H1 title fallback and no cover by default. Explicit title and
-cover metadata still take precedence over automatic defaults; `--cover` and
-`--no-cover` override cover metadata. The technical theme, smart pagination,
-automatic Mermaid sizing, TOC, bookmarks and footer are enabled by default.
-Section numbering remains opt-in to avoid duplicating existing chapter numbers.
+## Limitations
+
+- Links between separate Markdown files are not rewritten into internal PDF links.
+- Image lookup searches input directories in order; use unique relative asset paths when combining documents.
+- Conflicting frontmatter follows Pandoc's combined metadata rules.
+- TOC page numbers are resolved from an initial PDF rendering pass. Bookmarks use measured heading destinations, with first-pass positions as a fallback.
+- Smart pagination is best-effort; large diagrams, tables and sections may need additional pages.
