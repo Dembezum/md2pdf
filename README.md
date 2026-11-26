@@ -12,10 +12,10 @@ Run from a local checkout:
 nix run . -- document.md
 ```
 
-Or run directly from the Git repository (replace `<user>` with the repository owner):
+Or run directly from GitHub without cloning the repository:
 
 ```bash
-nix run 'git+ssh://git@dkgiteap01/<user>/md2pdf' -- document.md
+nix run github:Dembezum/md2pdf -- document.md
 ```
 
 The PDF is saved next to the Markdown file unless an output path is specified.
