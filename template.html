@@ -1,268 +1,31 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="$if(lang)$$lang$$else$en$endif$">
 <head>
     <meta charset="utf-8">
-
-    <style>
-        $githubcss$ $highlighting-css$ @page {
-            margin: 15mm;
-        }
-
-        html,
-        body {
-            background: white;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        .markdown-body {
-            box-sizing: border-box;
-
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-
-            font-size: 16px;
-            line-height: 1.6;
-
-            color: #24292f;
-            background: white;
-        }
-
-        /* ---------- TOC ---------- */
-
-        #TOC {
-            background: #f6f8fa;
-            border: 1px solid #d0d7de;
-            border-radius: 6px;
-
-            padding: 1em 1.5em;
-            margin-bottom: 2em;
-
-            page-break-after: avoid;
-        }
-
-        #TOC ul {
-            list-style-type: none;
-            margin-bottom: 0;
-        }
-
-        /* ---------- Headings ---------- */
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            page-break-after: avoid;
-            break-after: avoid-page;
-        }
-
-        h1+*,
-        h2+*,
-        h3+*,
-        h4+* {
-            page-break-before: avoid;
-            break-before: avoid-page;
-        }
-
-        h1 {
-            margin-top: 1em;
-            border-bottom: 1px solid #d0d7de;
-            padding-bottom: .3em;
-        }
-
-        h2 {
-            margin-top: .8em;
-            border-bottom: 1px solid #d0d7de;
-            padding-bottom: .3em;
-        }
-
-        h3 {
-            margin-top: .8em;
-        }
-
-        p {
-            orphans: 3;
-            widows: 3;
-        }
-
-        ul,
-        ol {
-            padding-left: 2em;
-        }
-
-        /* ---------- Inline code only ---------- */
-
-        p code,
-        li code,
-        td code,
-        blockquote code {
-            background: rgba(175, 184, 193, 0.2);
-            border-radius: 4px;
-
-            padding: 0.15em 0.3em;
-            font-size: 85%;
-        }
-
-        /* Prevent diagram/codeblock striping */
-
-        pre code {
-            background: transparent !important;
-            padding: 0 !important;
-            border-radius: 0 !important;
-        }
-
-        /* ---------- Syntax highlighting ---------- */
-
-        code span.st {
-            color: #0a3069;
-        }
-
-        code span.ss {
-            color: #0a3069;
-        }
-
-        code span.va {
-            color: #953800;
-        }
-
-        code span.op {
-            color: #cf222e;
-        }
-
-        code span.kw {
-            color: #cf222e;
-            font-weight: 600;
-        }
-
-        code span.fu {
-            color: #8250df;
-        }
-
-        code span.dv {
-            color: #0550ae;
-        }
-
-        /* ---------- Source code ---------- */
-
-        pre.sourceCode {
-            background: #fafbfc;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-
-            padding: 16px 20px;
-
-            overflow: visible !important;
-
-            font-size: 0.80em;
-            line-height: 1.3;
-        }
-
-        div.sourceCode {
-            overflow: visible !important;
-        }
-
-        code.sourceCode {
-            white-space: pre-wrap;
-        }
-
-        /* ---------- Plain-text diagrams ---------- */
-
-        pre.text,
-        pre:not(.sourceCode) {
-            background: #fcfcfc;
-            border: 1px solid #d8dee4;
-            border-radius: 6px;
-
-            padding: 10px 14px;
-
-            overflow: visible !important;
-
-            break-inside: avoid;
-            page-break-inside: avoid;
-
-            font-size: 0.85em;
-            line-height: 1.2;
-        }
-
-        /* ---------- Tables ---------- */
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table th,
-        table td {
-            border: 1px solid #d0d7de;
-            padding: 6px 13px;
-        }
-
-        table th {
-            background: #f6f8fa;
-        }
-
-        /* ---------- Images ---------- */
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .mermaid-diagram {
-            text-align: center;
-            break-inside: avoid;
-            page-break-inside: avoid;
-            margin: 16px 0;
-        }
-
-        .mermaid-diagram img {
-            display: block;
-            max-width: 100%;
-            max-height: 120mm;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            margin: 0 auto;
-        }
-
-        /* ---------- Blockquotes ---------- */
-
-        blockquote {
-            background: #f6f8fa;
-
-            border-left: 4px solid #3979c4;
-            border-radius: 6px;
-
-            padding: 12px 16px;
-            margin: 1em 0;
-
-            color: #24292f;
-        }
-
-        /* ---------- HR ---------- */
-
-        hr {
-            border: 0;
-            border-top: 1px solid #d0d7de;
-            margin: 2em 0;
-        }
-    </style>
+    <title>$if(title)$$title$$else$Document$endif$</title>
+    <style>$highlighting-css$</style>
+    <style>$md2pdf-css$</style>
 
 </head>
-
-<body>
-
+<body data-cover="$if(cover)$yes$else$no$endif$" class="theme-$md2pdf-theme$ pagination-$md2pdf-pagination$">
+    $if(cover)$
+    <header class="cover">
+        <div class="eyebrow">$if(document-type)$$document-type$$else$Technical documentation$endif$</div>
+        <div class="cover-title">$title$</div>
+        $if(subtitle)$<div class="subtitle">$subtitle$</div>$endif$
+        <div class="cover-rule"></div>
+        <div class="cover-meta">
+            $for(author)$<div>$author$</div>$endfor$
+            $if(version)$<div>Version $version$</div>$endif$
+            $if(date)$<div>$date$</div>$endif$
+        </div>
+    </header>
+    $endif$
+    $if(toc)$
+    <nav id="TOC" aria-label="Contents"><div class="toc-title">Contents</div>$table-of-contents$</nav>
+    $endif$
     <article class="markdown-body">
         $body$
     </article>
-
 </body>
-
 </html>

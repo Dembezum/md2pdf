@@ -9,12 +9,12 @@ Convert GitHub-flavored Markdown into clean, PDFs using:
 
 The generated PDFs are optimized for technical documentation and include:
 
-- GitHub-style typography
+- Four document themes with packaged fonts
 - Syntax highlighting
 - Automatic table of contents
 - Clean page layout
 - Sensible page breaks
-- No browser headers or footers
+- Page numbers without browser URL/date headers
 - Embedded styling for reproducible output
 
 > See the [output here](./mdtest.pdf)
@@ -116,3 +116,40 @@ PDF
 ```
 
 ---
+
+## Themes and layout
+
+```bash
+nix run . -- showcase.md
+nix run . -- showcase.md --theme academic
+nix run . -- showcase.md --theme professional --pagination sections
+nix run . -- showcase.md --theme minimal --pagination flow --no-toc --no-footer
+```
+
+Themes: `technical` (default), `academic`, `professional`, `minimal`.
+
+Pagination: `chapters` (default) starts H1 headings on new pages; `sections`
+also starts H2 headings on new pages, except immediately after H1; `flow`
+uses natural page breaks. All modes keep headings with following content.
+
+Optional YAML metadata:
+
+```yaml
+---
+title: Linux Fleet Management
+subtitle: Architecture and implementation
+author: Platform Engineering
+version: 2.0
+date: November 2026
+cover: true
+toc: true
+theme: technical
+pagination: chapters
+---
+```
+
+CLI theme and pagination override metadata. Use `toc: false` or `--no-toc`
+to omit the contents page. Cover pages require a title. Page numbers can be
+removed with `--no-footer` and require Chromium support for CSS page margin boxes.
+GitHub alerts and language-labelled fenced code blocks are styled automatically.
+Local image paths are resolved relative to the Markdown file.
