@@ -52,6 +52,7 @@ body { color: var(--ink); font-family: var(--body-font); font-size: 10pt; line-h
 .cover-rule { width: 23mm; height: 2mm; background: var(--accent); margin: 10mm 0 40mm; }
 .cover-meta { border-top: 1px solid var(--line); padding-top: 6mm; color: var(--muted); }
 @media print {
+    .pagination-smart .markdown-body > h1:not(:first-child),
     .pagination-chapters .markdown-body > h1:not(:first-child),
     .pagination-sections .markdown-body > h1:not(:first-child),
     .pagination-sections .markdown-body > h2:not(:first-child) { break-before: page; margin-top: 0; }
@@ -69,4 +70,22 @@ body { color: var(--ink); font-family: var(--body-font); font-size: 10pt; line-h
 #TOC li > a { display: flex; align-items: baseline; gap: .5em; }
 #TOC .toc-leader { flex: 1; border-bottom: 1px dotted var(--muted); }
 #TOC .toc-page { min-width: 3ch; text-align: right; font-variant-numeric: tabular-nums; }
-.markdown-body .mermaid-diagram img { max-height: 95mm; max-width: 90%; }
+.markdown-body .mermaid-diagram img { max-height: 110mm; max-width: 95%; }
+
+/* Probes exist only in the first rendering pass. */
+.markdown-body a.md2pdf-probe { position: absolute; font-size: 1px; line-height: 1px; }
+#TOC .toc-label { min-width: 0; }
+#TOC .toc-page { flex: 0 0 5ch; }
+.markdown-body .mermaid-diagram:has(+ p) { break-after: avoid-page; }
+.markdown-body .mermaid-diagram + p { break-inside: avoid-page; }
+.markdown-body .mermaid-diagram { margin: 10px 0; }
+
+.markdown-body .mermaid-small img { max-height: 65mm; }
+.markdown-body .mermaid-normal img { max-height: 110mm; }
+.markdown-body .mermaid-large img { max-height: 180mm; }
+.markdown-body .mermaid-full img { max-height: 215mm; }
+@media print {
+    .pagination-smart .smart-section { break-inside: avoid-page; }
+    .pagination-smart .markdown-body > h1 + .smart-section { break-before: avoid-page; }
+    .markdown-body .mermaid-full:has(+ p) { break-after: auto; }
+}

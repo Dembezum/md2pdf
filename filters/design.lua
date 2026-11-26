@@ -7,10 +7,9 @@ end
 
 function Meta(meta)
     meta['md2pdf-theme'] = setting(meta, 'theme', 'MD2PDF_THEME_OVERRIDE', 'technical', {technical=true, academic=true, professional=true, minimal=true})
-    meta['md2pdf-pagination'] = setting(meta, 'pagination', 'MD2PDF_PAGINATION_OVERRIDE', 'chapters', {chapters=true, sections=true, flow=true})
+    meta['md2pdf-pagination'] = setting(meta, 'pagination', 'MD2PDF_PAGINATION_OVERRIDE', 'smart', {smart=true, chapters=true, sections=true, flow=true})
     if os.getenv('MD2PDF_TOC') == 'false' or meta.toc == false then meta.toc = false else meta.toc = true end
     meta['md2pdf-footer'] = os.getenv('MD2PDF_FOOTER') ~= 'false'
-    if meta.cover and not meta.title then error('cover requires title metadata') end
     return meta
 end
 
@@ -45,4 +44,72 @@ function CodeBlock(block)
     if not language or language == 'mermaid' or language == 'text' or language == 'plain' then return nil end
     local label = pandoc.Div({pandoc.Plain({pandoc.Str(language:upper())})}, pandoc.Attr('', {'code-label'}))
     return pandoc.Div({label, block}, pandoc.Attr('', {'code-panel'}))
+end
+
+-- Group only bounded leaf subsections; long or nested sections remain breakable.
+local function short_section(blocks)
+    local words, diagrams = 0, 0
+    if #blocks > 8 then return false end
+    for _, block in ipairs(blocks) do
+        if block.t == 'Div' and block.classes:includes('mermaid-diagram') then
+            if block.classes:includes('mermaid-full') then return false end
+            diagrams = diagrams + 1
+        elseif block.t == 'Para' or block.t == 'Plain' or block.t == 'BulletList' or block.t == 'OrderedList' or block.t == 'Header' then
+            for _ in pandoc.utils.stringify(block):gmatch('%S+') do words = words + 1 end
+        else
+            return false
+        end
+    end
+    return diagrams <= 1 and words <= (diagrams == 1 and 120 or 230)
+end
+
+local function group_sections(blocks)
+    local result = pandoc.List()
+    local i = 1
+    while i <= #blocks do
+        local head = blocks[i]
+        if head.t == 'Header' and head.level >= 2 then
+            local j = i + 1
+            while j <= #blocks and blocks[j].t ~= 'Header' do j = j + 1 end
+            local leaf = j > #blocks or blocks[j].level <= head.level
+            local section = pandoc.List()
+            for k = i, j - 1 do section:insert(blocks[k]) end
+            if leaf and #section > 1 and short_section(section) then
+                result:insert(pandoc.Div(section, pandoc.Attr('', {'smart-section'})))
+            else
+                for _, block in ipairs(section) do result:insert(block) end
+            end
+            i = j
+        else
+            result:insert(head)
+            i = i + 1
+        end
+    end
+    return result
+end
+
+function Pandoc(doc)
+    local default_title = os.getenv('MD2PDF_DEFAULT_TITLE') or ''
+    local cover = os.getenv('MD2PDF_COVER_OVERRIDE') or ''
+    if cover ~= '' then
+        doc.meta.cover = pandoc.MetaBool(cover == 'true')
+    elseif doc.meta.cover == nil then
+        doc.meta.cover = pandoc.MetaBool(default_title ~= '')
+    end
+    if not doc.meta.title and default_title ~= '' then
+        doc.meta.title = pandoc.MetaString(default_title)
+    end
+    if not doc.meta.title then
+        for _, block in ipairs(doc.blocks) do
+            if block.t == 'Header' and block.level == 1 then
+                doc.meta.title = pandoc.MetaInlines(block.content)
+                break
+            end
+        end
+    end
+    if doc.meta.cover and not doc.meta.title then error('cover requires a title or H1') end
+    if pandoc.utils.stringify(doc.meta['md2pdf-pagination']) == 'smart' then
+        doc.blocks = group_sections(doc.blocks)
+    end
+    return doc
 end

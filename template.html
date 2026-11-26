@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>$if(title)$$title$$else$Document$endif$</title>
+    $for(author)$<meta name="author" content="$author$">$endfor$
+    $if(subject)$<meta name="subject" content="$subject$">$endif$
+    $for(keywords)$<meta name="keywords" content="$keywords$">$endfor$
     <style>$highlighting-css$</style>
     <style>$md2pdf-css$</style>
 
